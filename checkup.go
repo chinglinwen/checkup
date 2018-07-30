@@ -225,14 +225,20 @@ func (c Checkup) MarshalJSON() ([]byte, error) {
 		if err != nil {
 			return result, err
 		}
-		var notifierName string
-		switch c.Notifier.(type) {
-		case Slack:
-			notifierName = "slack"
-		default:
-			return result, fmt.Errorf("unknown Notifier type")
-		}
-		nb = []byte(fmt.Sprintf(`{"name":"%s",%s`, notifierName, string(nb[1:])))
+
+		// the name is conflict with notify struct,comments out here.
+		/*
+			var notifierName string
+			switch c.Notifier.(type) {
+			case Slack:
+				notifierName = "slack"
+			case Qianbao:
+				notifierName = "qianbao"
+			default:
+				return result, fmt.Errorf("unknown Notifier type")
+			}
+			nb = []byte(fmt.Sprintf(`{"name":"%s",%s`, notifierName, string(nb[1:])))
+		*/
 		wrap("notifier", nb)
 	}
 
@@ -357,6 +363,13 @@ func (c *Checkup) UnmarshalJSON(b []byte) error {
 		switch types.Notifier.Name {
 		case "slack":
 			var notifier Slack
+			err = json.Unmarshal(raw.Notifier, &notifier)
+			if err != nil {
+				return err
+			}
+			c.Notifier = notifier
+		case "qianbao":
+			var notifier Qianbao
 			err = json.Unmarshal(raw.Notifier, &notifier)
 			if err != nil {
 				return err

@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"           // Enable postgresql beckend
-	_ "github.com/mattn/go-sqlite3" // Enable sqlite3 backend
+	_ "github.com/lib/pq" // Enable postgresql beckend
+	//_ "github.com/mattn/go-sqlite3" // Enable sqlite3 backend
 )
 
 // schema is the table schema expected by the sqlite3 checkup storage.
