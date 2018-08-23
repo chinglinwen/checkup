@@ -152,8 +152,8 @@ func (c HTTPChecker) conclude(result Result) Result {
 // the configuration of c. It returns a non-nil error if down.
 // Note that it does not check for degraded response.
 func (c HTTPChecker) checkDown(resp *http.Response) error {
-	// Check status code
-	if resp.StatusCode != c.UpStatus {
+	// Check status code, add range detect
+	if resp.StatusCode > c.UpStatus {
 		return fmt.Errorf("response status %s", resp.Status)
 	}
 

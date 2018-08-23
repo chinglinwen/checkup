@@ -69,6 +69,13 @@ func (c Checkup) Check() ([]Result, error) {
 		wg.Add(1)
 		go func(i int, checker Checker) {
 			results[i], errs[i] = checker.Check()
+
+			var msg string
+			if errs[i] != nil {
+				msg += ", err: " + errs[i].Error()
+			}
+			fmt.Printf("checked %v, %v %v%v\n", i, results[i].Title, results[i].Endpoint, msg)
+
 			<-throttle
 			wg.Done()
 		}(i, checker)
