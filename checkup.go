@@ -71,9 +71,12 @@ func (c Checkup) Check() ([]Result, error) {
 		go func(i int, checker Checker) {
 			results[i], errs[i] = checker.Check()
 
-			var msg string
+			msg := ", ok"
 			if errs[i] != nil {
 				msg = ", err: " + errs[i].Error()
+			}
+			if !results[i].Healthy {
+				msg = fmt.Sprintf(", check failed, status: %v", results[i].Status())
 			}
 			fmt.Printf("checked %v, %v %v%v\n", i, results[i].Title, results[i].Endpoint, msg)
 
