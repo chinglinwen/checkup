@@ -83,7 +83,7 @@ func (c Checkup) Check() ([]Result, error) {
 	}
 	wg.Wait()
 
-	fmt.Println("all checks done ", errs)
+	log.Println("all checks done ", errs)
 
 	if !c.Timestamp.IsZero() {
 		for i := range results {
