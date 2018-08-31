@@ -7,11 +7,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/chinglinwen/log"
 
 	"github.com/fatih/color"
 )
@@ -72,7 +73,9 @@ func (c Checkup) Check() ([]Result, error) {
 
 			var msg string
 			if errs[i] != nil {
-				msg += ", err: " + errs[i].Error()
+				msg = ", err: " + errs[i].Error()
+			} else {
+				msg = ", ok"
 			}
 			fmt.Printf("checked %v, %v %v%v\n", i, results[i].Title, results[i].Endpoint, msg)
 
@@ -81,6 +84,8 @@ func (c Checkup) Check() ([]Result, error) {
 		}(i, checker)
 	}
 	wg.Wait()
+
+	log.Println("all checks done ", errs)
 
 	if !c.Timestamp.IsZero() {
 		for i := range results {
@@ -115,7 +120,7 @@ func (c Checkup) CheckAndStore() error {
 	if err != nil {
 		return err
 	}
-
+	log.Println("checkandstore ", results, err)
 	err = c.Storage.Store(results)
 	if err != nil {
 		return err
