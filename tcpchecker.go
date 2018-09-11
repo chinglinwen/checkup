@@ -44,6 +44,12 @@ type TCPChecker struct {
 	// Attempts is how many requests the client will
 	// make to the endpoint in a single check.
 	Attempts int `json:"attempts,omitempty"`
+
+	// AttemptSpacing spaces out each attempt in a check
+	// by this duration to avoid hitting a remote too
+	// quickly in succession. By default, no waiting
+	// occurs between attempts.
+	AttemptSpacing time.Duration `json:"attempt_spacing,omitempty"`
 }
 
 // Check performs checks using c according to its configuration.
@@ -107,6 +113,10 @@ func (c TCPChecker) doChecks() Attempts {
 		if err != nil {
 			checks[i].Error = err.Error()
 			continue
+		}
+
+		if c.AttemptSpacing > 0 {
+			time.Sleep(c.AttemptSpacing)
 		}
 	}
 	return checks
