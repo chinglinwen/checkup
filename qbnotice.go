@@ -21,7 +21,7 @@ func Send(content, status, expire string) {
 	if d, found := cache.Get(user, content, status); found {
 		e := fmt.Sprintf("user: %v, content: %v not expired in %v, skip send\n",
 			user, content, d.Format("15:04:05"))
-		log.Printf(e)
+		log.Debug.Printf(e)
 		return
 	}
 
