@@ -26,7 +26,7 @@ func Send(content, status, expire string) {
 	}
 
 	// set cache
-	log.Printf("user %v,%v, status: %v, expire set to %v\n", user, content, status, expire)
+	log.Printf("user %v, %v, status: %v, expire set to %v\n", user, content, status, expire)
 	cache.Set(user, content, status, expire)
 
 	reply, err := notice.Send(user, content, status, expire)
