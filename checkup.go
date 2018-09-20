@@ -84,7 +84,7 @@ func (c Checkup) Check() ([]Result, error) {
 				content := results[i].Title + " " + results[i].Endpoint
 				status := fmt.Sprintf("%v", results[i].Status())
 				// send alert, peer service will do prevent repeat based on status change
-				Send(content, status)
+				Send(content, status, "10m")
 			}
 			<-throttle
 			wg.Done()

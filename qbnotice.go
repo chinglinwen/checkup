@@ -12,8 +12,8 @@ var (
 )
 
 // it's depend on svc-d for flag setting
-func Send(content, status string) {
-	reply, err := notice.Send(DefaultReceiver, content)
+func Send(content, status, expire string) {
+	reply, err := notice.Send(DefaultReceiver, content, status, expire)
 	if err != nil {
 		log.Printf("send alertall err: %v, resp: %v\n", err, reply)
 	} else {
