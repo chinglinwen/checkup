@@ -2,8 +2,9 @@
 package checkup
 
 import (
-	"log"
 	"wen/svc-d/notice"
+
+	"github.com/chinglinwen/log"
 )
 
 var (
