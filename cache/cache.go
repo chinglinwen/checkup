@@ -13,6 +13,7 @@ type msg struct {
 	content string
 	status  string
 	d       time.Duration
+	n       int
 }
 
 // how to detect it's new ( by parameter )
@@ -20,20 +21,28 @@ type msg struct {
 // compare the old status and new status
 func Set(user, content, status, expire string) {
 	d, _ := time.ParseDuration(expire)
-	C.Set(user+content, msg{content, status, d}, d)
+	C.Set(user+content, msg{content, status, d, 0}, d)
 }
 
 func Get(user, content, status string) (time.Time, bool) {
 	cc, d, found := C.GetWithExpiration(user + content)
 	if found {
 		if cmsg, ok := cc.(msg); ok && cmsg.content == content {
+			if cmsg.status == "healthy" && cmsg.n == 0 {
+				// ignore the first time ok status
+				return time.Time{}, true
+			}
 			if cmsg.status == status {
 				// cache exist and status not changed, return true
 				return d, true
 			} else {
 				// if status changed, update the cache
-				C.Set(user+content, msg{content, status, cmsg.d}, cmsg.d)
+				C.Set(user+content, msg{content, status, cmsg.d, cmsg.n + 1}, cmsg.d)
 			}
+		}
+	} else {
+		if status == "healthy" {
+			return time.Time{}, true
 		}
 	}
 	return time.Time{}, false
